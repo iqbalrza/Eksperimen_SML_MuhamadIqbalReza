@@ -1,0 +1,80 @@
+name: Preprocessing Telco Churn Dataset
+on:
+  # Trigger otomatis saat ada push ke main
+  push:
+    branches:
+      - main
+    paths:
+      - 'telco_churn_raw/**'
+      - 'preprocessing/automate_*.py'
+      - 'requirements.txt'
+      - '.github/workflows/preprocessing.yml'
+  
+  # Trigger manual via tombol di GitHub UI
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preprocess:
+    name: Run Preprocessing Pipeline
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python 3.12.7
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.7'
+
+      - name: Check Python version & environment
+        run: |
+          python --version
+          pip --version
+          echo "Working directory: $(pwd)"
+          ls -la
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run preprocessing automation
+        run: |
+          cd preprocessing
+          python automate_MuhamadIqbalReza.py
+      
+      - name: Verify preprocessed output
+        run: |
+          echo "Checking preprocessed files..."
+          ls -la telco_churn_preprocessing/
+          
+          # Pastikan semua file CSV ada
+          for file in telco_churn_clean.csv X_train.csv X_test.csv y_train.csv y_test.csv; do
+            if [ ! -f "telco_churn_preprocessing/$file" ]; then
+              echo "ERROR: $file tidak ditemukan!"
+              exit 1
+            fi
+            echo "OK: $file ($(wc -l < telco_churn_preprocessing/$file) baris)"
+          done
+      
+      - name: Commit preprocessed dataset
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git add telco_churn_preprocessing/
+          
+          # Hanya commit jika ada perubahan
+          if git diff --staged --quiet; then
+            echo "Tidak ada perubahan pada hasil preprocessing"
+          else
+            git commit -m "auto: update preprocessed dataset [skip ci]"
+            git push
+            echo "Hasil preprocessing berhasil di-commit kembali ke repo"
+          fi
