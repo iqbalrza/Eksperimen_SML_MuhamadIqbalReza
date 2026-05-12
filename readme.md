@@ -7,17 +7,31 @@ Submission **Membangun Sistem Machine Learning (MSML)** - Dicoding x Microsoft E
 Repository ini berisi eksperimen preprocessing dataset **Telco Customer Churn** untuk klasifikasi binary prediction churn pelanggan.
 
 ## Struktur Folder
+```bash
 Eksperimen_SML_MuhamadIqbalReza/
-├── .github/workflows/preprocessing.yml      # GitHub Actions (Day 2)
+│
+├── .github/
+│   └── workflows/
+│       └── preprocessing.yml          # GitHub Actions workflow
+│
+├── Eksperimen_MuhamadIqbalReza.ipynb # Notebook eksperimen
+│
+├── automate_MuhamadIqbalReza.py      # Script otomatisasi preprocessing
+│
+├── telco_churn_raw.csv               # Dataset mentah
+├── telco_churn_clean.csv             # Dataset hasil cleaning
+│
 ├── preprocessing/
-│   ├── Eksperimen_MuhamadIqbalReza.ipynb    # Notebook eksperimen
-│   └── automate_MuhamadIqbalReza.py         # Script otomatisasi (Day 2)
-├── telco_churn_raw/
-│   └── telco_churn_raw.csv                  # Dataset mentah
-└── telco_churn_preprocessing/
-├── telco_churn_clean.csv                # Dataset preprocessed
-├── X_train.csv, X_test.csv              # Fitur train/test
-└── y_train.csv, y_test.csv              # Target train/test
+│   ├── telco_churn_preprocessing/    # Hasil preprocessing
+│   │
+│   ├── X_train.csv                   # Fitur data train
+│   ├── X_test.csv                    # Fitur data test
+│   │
+│   ├── y_train.csv                   # Target data train
+│   └── y_test.csv                    # Target data test
+│
+└── README.md
+```
 
 ## Dataset
 
